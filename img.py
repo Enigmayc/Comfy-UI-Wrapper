@@ -10,6 +10,7 @@ import numpy as np
 URL = "http://10.11.0.232:8188/api/prompt"
 OUTPUT_DIR = '//10.11.0.232/Users/Digital Experience/Downloads/ComfyUI_windows_portable_nvidia_cu118_or_cpu/ComfyUI_windows_portable/ComfyUI/output'
 INPUT_DIR = '//10.11.0.232/Users/Digital Experience/Downloads/ComfyUI_windows_portable_nvidia_cu118_or_cpu/ComfyUI_windows_portable/ComfyUI/input/input.png'
+INPUT_DIR_REF = '//10.11.0.232/Users/Digital Experience/Downloads/ComfyUI_windows_portable_nvidia_cu118_or_cpu/ComfyUI_windows_portable/ComfyUI/input/refer.png'
 
 
 #generated image from rarri
@@ -27,24 +28,37 @@ def start_queue(prompt_workflow):
     data = json.dumps(p).encode('utf-8')
     requests.post(URL, data = data)
 
-def generate_image(upload_image):
+def generate_image(upload_image_1, upload_image_2):
     # Convert the uploaded image to a PIL image if necessary
-    if isinstance(upload_image, np.ndarray):
-        upload_image = Image.fromarray(upload_image)
+    if isinstance(upload_image_1, np.ndarray):
+        upload_image_1 = Image.fromarray(upload_image_1)
 
     # Resize the image to match the input requirements (assuming 512x512)
-    min_side = min(upload_image.size)
+    min_side = min(upload_image_1.size)
     scale_factor = 512 / min_side
-    new_side = (round(upload_image.size[0] * scale_factor), round(upload_image.size[1] * scale_factor))
-    resized_image = upload_image.resize(new_side)
+    new_side = (round(upload_image_1.size[0] * scale_factor), round(upload_image_1.size[1] * scale_factor))
+    resized_image_1 = upload_image_1.resize(new_side)
 
     # Save the resized image to the input directory
-    resized_image.save(INPUT_DIR)
+    resized_image_1.save(INPUT_DIR)
+
+    if isinstance(upload_image_2, np.ndarray):
+        upload_image_2 = Image.fromarray(upload_image_2)
+
+    # Resize the image to match the input requirements (assuming 512x512)
+    min_side = min(upload_image_2.size)
+    scale_factor = 512 / min_side
+    new_side = (round(upload_image_2.size[0] * scale_factor), round(upload_image_2.size[1] * scale_factor))
+    resized_image_2 = upload_image_2.resize(new_side)
+
+    # Save the resized image to the input directory
+    resized_image_2.save(INPUT_DIR_REF)
 
     # Load workflow data from JSON file
     with open("imgtoimg_api.json", "r", encoding="utf-8") as file_json:
         prompt = json.load(file_json)
-        prompt['14']['inputs']['image'] = INPUT_DIR  # Set the path to the uploaded image
+        prompt['14']['inputs']['image'] = INPUT_DIR 
+        prompt['18']['inputs']['image'] = INPUT_DIR_REF # Set the path to the uploaded image
 
 
     previous_image = get_image(OUTPUT_DIR)
@@ -57,7 +71,7 @@ def generate_image(upload_image):
             return latest_image
         time.sleep(1)
 
-ui = gr.Interface(fn=generate_image, inputs=['image'], outputs=['image'])
+ui = gr.Interface(fn=generate_image, inputs=['image', 'image'], outputs=['image'])
 
 ui.launch()
 
