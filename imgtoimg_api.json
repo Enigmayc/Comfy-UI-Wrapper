@@ -44,7 +44,7 @@
   },
   "14": {
     "inputs": {
-      "image": "Aspiring Achievers.png",
+      "image": "lukesf_visitors_at_travel_and_tourism_booth_on_exhibition_--sty_924acc9e-d22d-4142-92c0-a13b154151f7.png",
       "upload": "image"
     },
     "class_type": "LoadImage",
@@ -75,7 +75,7 @@
       "weight_interpretation": "comfy",
       "empty_latent_width": ["30", 2],
       "empty_latent_height": ["29", 2],
-      "batch_size": 4,
+      "batch_size": 1,
       "cnet_stack": ["10", 0]
     },
     "class_type": "Efficient Loader",
@@ -85,7 +85,7 @@
   },
   "18": {
     "inputs": {
-      "image": "cube_back.png",
+      "image": "kingsmendigitalexperience_httpss.mj.runEUIBRI8kjmQ_make_it_sm_7ad776c8-dad9-4bf1-90e0-a3f251837ef2_2.png",
       "upload": "image"
     },
     "class_type": "LoadImage",
@@ -138,7 +138,7 @@
   },
   "24": {
     "inputs": {
-      "seed": 1099753837066618
+      "seed": 379856091774493
     },
     "class_type": "Seed",
     "_meta": {
@@ -153,15 +153,6 @@
     "class_type": "ImageUpscaleWithModel",
     "_meta": {
       "title": "Upscale Image (using Model)"
-    }
-  },
-  "26": {
-    "inputs": {
-      "images": ["25", 0]
-    },
-    "class_type": "PreviewImage",
-    "_meta": {
-      "title": "results"
     }
   },
   "28": {
@@ -244,7 +235,7 @@
   },
   "38": {
     "inputs": {
-      "batch_size": 4,
+      "batch_size": 1,
       "latent": ["35", 0]
     },
     "class_type": "CR Latent Batch Size",
@@ -297,7 +288,7 @@
   },
   "59": {
     "inputs": {
-      "a": 6.283185307179586,
+      "a": 6.28,
       "bg_threshold": 0.1,
       "resolution": 512,
       "image": ["20", 0]
@@ -305,6 +296,21 @@
     "class_type": "MiDaS-DepthMapPreprocessor",
     "_meta": {
       "title": "MiDaS Depth Map"
+    }
+  },
+  "61": {
+    "inputs": {
+      "filename_prefix": "",
+      "folder": "",
+      "overwrite_warning": false,
+      "include_metadata": true,
+      "extension": "png",
+      "quality": 95,
+      "images": ["25", 0]
+    },
+    "class_type": "> Save Image",
+    "_meta": {
+      "title": "😼> Save Image"
     }
   }
 }
