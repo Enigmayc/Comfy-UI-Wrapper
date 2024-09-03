@@ -1,0 +1,103 @@
+{
+  "12": {
+    "inputs": {
+      "ckpt_name": "airtistRealisticXL_v50Lightning.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
+  },
+  "13": {
+    "inputs": {
+      "seed": ["27", 3],
+      "steps": 6,
+      "cfg": 3,
+      "sampler_name": "dpmpp_2s_ancestral",
+      "scheduler": "beta",
+      "denoise": 1,
+      "model": ["12", 0],
+      "positive": ["14", 0],
+      "negative": ["15", 0],
+      "latent_image": ["21", 0]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "14": {
+    "inputs": {
+      "text": "cyberpunk city, flying man, glowing neon wings, colourful, trippy, psychedelic, angel, neon, paint splat, drip, digital, glitch, photorealistic, high res, cinematic, atmospheric, fog, glow, mask",
+      "clip": ["12", 1]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "15": {
+    "inputs": {
+      "text": "",
+      "clip": ["12", 1]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "18": {
+    "inputs": {
+      "samples": ["13", 0],
+      "vae": ["12", 2]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "21": {
+    "inputs": {
+      "width": 1024,
+      "height": 1024,
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "Empty Latent Image"
+    }
+  },
+  "23": {
+    "inputs": {
+      "filename_prefix": "",
+      "folder": "",
+      "overwrite_warning": false,
+      "include_metadata": true,
+      "extension": "png",
+      "quality": 100,
+      "images": ["18", 0]
+    },
+    "class_type": "> Save Image",
+    "_meta": {
+      "title": "😼> Save Image"
+    }
+  },
+  "25": {
+    "inputs": {
+      "images": ["18", 0]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "27": {
+    "inputs": {
+      "seed": 669794192449111
+    },
+    "class_type": "Seed",
+    "_meta": {
+      "title": "Seed"
+    }
+  }
+}
