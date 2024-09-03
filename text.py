@@ -3,7 +3,6 @@ import json
 import requests
 import os
 import time
-import re
 
 #RARRI POST URL
 URL = "http://10.11.0.232:8188/api/prompt"
@@ -26,10 +25,13 @@ def start_queue(prompt_workflow):
     requests.post(URL, data = data)
 
 
-def generate_image():
+def generate_image(positive_prompt, negative_prompt, steps):
     # Load workflow data from json file
-    with open("workflow_api.json", "r",encoding="utf-8") as file_json:
+    with open("texttoimg_api.json", "r",encoding="utf-8") as file_json:
         prompt = json.load(file_json)
+        prompt['14']['inputs']['text'] = f'{positive_prompt}'
+        prompt['15']['inputs']['text'] = f'{negative_prompt}'
+        prompt['13']['inputs']['steps'] = steps
     
     previous_image = get_image(OUTPUT_DIR)
 
@@ -41,7 +43,7 @@ def generate_image():
             return latest_image
         time.sleep(1)
 
-ui = gr.Interface(fn=generate_image, inputs=[], outputs=['image'])
+ui = gr.Interface(fn=generate_image, inputs=['text', 'text', 'text'], outputs=['image'])
 
 ui.launch()
 
