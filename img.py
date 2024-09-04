@@ -28,7 +28,7 @@ def start_queue(prompt_workflow):
     data = json.dumps(p).encode('utf-8')
     requests.post(URL, data = data)
 
-def generate_image(upload_image_1, upload_image_2):
+def generate_image(upload_image_1, upload_image_2,positive_prompt, negative_prompt, steps):
     # Convert the uploaded image to a PIL image if necessary
     if isinstance(upload_image_1, np.ndarray):
         upload_image_1 = Image.fromarray(upload_image_1)
@@ -59,19 +59,37 @@ def generate_image(upload_image_1, upload_image_2):
         prompt = json.load(file_json)
         prompt['14']['inputs']['image'] = INPUT_DIR 
         prompt['18']['inputs']['image'] = INPUT_DIR_REF # Set the path to the uploaded image
-
+        prompt['22']['inputs']['text'] = f'{positive_prompt}'
+        prompt['21']['inputs']['text'] = f'{negative_prompt}'
+        prompt['40']['inputs']['steps'] = steps
 
     previous_image = get_image(OUTPUT_DIR)
 
     start_queue(prompt) 
+
 
     while True:
         latest_image = get_image(OUTPUT_DIR)
         if latest_image!= previous_image:
             return latest_image
         time.sleep(1)
+with gr.Blocks() as ui:
+    with gr.Row():
+        with gr.Column(scale=1):
+            upload_image_1 = gr.Image(label="Upload Image", type="pil")
+            upload_image_2 = gr.Image(label="Upload Reference Image", type="pil")
+            positive_prompt = gr.Textbox(label="Positive Prompt")
+            negative_prompt = gr.Textbox(label="Negative Prompt")
+            steps = gr.Textbox(label="Render Time",  placeholder = "1-20")
+            submit_btn = gr.Button("Submit")
+        with gr.Column(scale=2):
+            output_image = gr.Image(label="Generated Image", type="pil")
 
-ui = gr.Interface(fn=generate_image, inputs=['image', 'image'], outputs=['image'])
+    submit_btn.click(fn=generate_image, inputs=[upload_image_1, upload_image_2, positive_prompt, negative_prompt, steps], outputs=output_image)
 
 ui.launch()
+# ui = gr.Interface(fn=generate_image, inputs=['image', 'image','text', 'text', 'text'], outputs=['image'])
+
+# ui.launch()
+
 
